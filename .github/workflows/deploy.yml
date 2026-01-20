@@ -2,7 +2,7 @@ name: Deploy SaaS to Production
 
 on:
   push:
-    branches: [prod] # Cambiado de main a prod
+    branches: [prod]
 
 jobs:
   deploy:
@@ -11,25 +11,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to VPS
+      - name: Execute remote deploy script
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            # Crear la carpeta si no existe
             mkdir -p ~/projects/saas
             cd ~/projects/saas
-
-            # Si no es un repositorio git, clonarlo. Si existe, actualizarlo.
-            if [ ! -d ".git" ]; then
-              git clone -b prod https://github.com/fedrianMF/portfolio-saas.git .
-            else
-              git fetch origin prod
-              git reset --hard origin/prod
-            fi
-
-            # Levantar Docker
-            docker compose -f docker-compose.prod.yml up -d --build
-            docker image prune -f
+            # Execute the local script
+            ./deploy.sh

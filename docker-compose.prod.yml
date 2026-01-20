@@ -12,7 +12,7 @@ services:
     volumes:
       - ./storage:/var/www/storage
       - ./bootstrap/cache:/var/www/bootstrap/cache
-      - saas_assets:/var/www/public/build
+      - saas_assets:/var/www/public # Compartimos toda la carpeta public
     networks:
       - web_network
 

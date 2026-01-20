@@ -1,5 +1,5 @@
 # Stage 1: Runtime
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 # 1. Install all dependencies, PHP extensions and SUPERVISOR
 RUN set -ex \

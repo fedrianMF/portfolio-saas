@@ -12,6 +12,7 @@ services:
     volumes:
       - ./storage:/var/www/storage
       - ./bootstrap/cache:/var/www/bootstrap/cache
+      - saas_assets:/var/www/public/build
     networks:
       - web_network
 
@@ -37,6 +38,8 @@ services:
 
 volumes:
   saas_db_data:
+  saas_assets:
+    external: true
 
 networks:
   web_network:

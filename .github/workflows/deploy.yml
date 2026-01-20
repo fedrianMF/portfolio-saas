@@ -11,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Execute remote deploy script
+      - name: Execute remote deployment
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -20,5 +20,17 @@ jobs:
           script: |
             mkdir -p ~/projects/saas
             cd ~/projects/saas
-            # Execute the local script
+
+            # 1. Bootstrapping: Get the code if it doesn't exist
+            if [ ! -d ".git" ]; then
+              git clone -b prod https://github.com/fedrianMF/portfolio-saas.git .
+            else
+              git fetch origin prod
+              git reset --hard origin/prod
+            fi
+
+            # 2. Ensure the script is executable
+            chmod +x deploy.sh
+
+            # 3. Run the deployment script
             ./deploy.sh

@@ -21,13 +21,14 @@ jobs:
             mkdir -p ~/projects/saas
             cd ~/projects/saas
 
-            # 1. Bootstrapping: Get the code if it doesn't exist
+            # 1. Initialize git if not present, then fetch and reset
             if [ ! -d ".git" ]; then
-              git clone -b prod https://github.com/fedrianMF/portfolio-saas.git .
-            else
-              git fetch origin prod
-              git reset --hard origin/prod
+              git init
+              git remote add origin https://github.com/fedrianMF/portfolio-saas.git
             fi
+            
+            git fetch origin prod
+            git reset --hard origin/prod
 
             # 2. Ensure the script is executable
             chmod +x deploy.sh

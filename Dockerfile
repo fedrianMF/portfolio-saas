@@ -2,7 +2,9 @@
 FROM php:8.3-fpm-alpine
 
 # 1. Install all dependencies, PHP extensions and SUPERVISOR
-RUN apk add --no-cache \
+RUN set -ex \
+    && apk update \
+    && apk add --no-cache \
     zip \
     libzip-dev \
     libpng-dev \
@@ -12,7 +14,7 @@ RUN apk add --no-cache \
     icu-dev \
     oniguruma-dev \
     supervisor \
-    busybox-initscripts
+    dcron
 
 # 2. Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \

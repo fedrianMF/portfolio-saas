@@ -43,16 +43,17 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # 5. Set working directory
 WORKDIR /var/www
 
-# 6. Copy the code
+# 6. Copy package.json and package-lock.json (First install dependencies of Frontend)
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
+
+# 7. Install dependencies of PHP (Optimize for production)
 COPY . .
-
-# 7. Schedule Laravel tasks
-RUN echo "* * * * * php /var/www/artisan schedule:run >> /dev/null 2>&1" > /etc/crontabs/www-data
-
-# 8. Install dependencies of PHP (Optimize for production)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
-RUN npm install
-RUN npm run build
+RUN npm run build && rm -rf node_modules
+
+# 8. Schedule Laravel tasks
+RUN echo "* * * * * php /var/www/artisan schedule:run >> /dev/null 2>&1" > /etc/crontabs/www-data
 
 # 9. Adjust permissions for Laravel (Add bootstrap/cache)
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/public/build

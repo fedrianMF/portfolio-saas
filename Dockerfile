@@ -5,6 +5,8 @@ FROM php:8.4-fpm-alpine
 RUN set -ex \
     && apk update \
     && apk add --no-cache \
+    nodejs \
+    npm \
     zip \
     libzip-dev \
     libpng-dev \
@@ -49,9 +51,11 @@ RUN echo "* * * * * php /var/www/artisan schedule:run >> /dev/null 2>&1" > /etc/
 
 # 8. Install dependencies of PHP (Optimize for production)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN npm install
+RUN npm run build
 
 # 9. Adjust permissions for Laravel (Add bootstrap/cache)
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache /var/www/public/build
 
 # 10. Supervisor configuration
 # Copy the config to the standard Alpine path for supervisor

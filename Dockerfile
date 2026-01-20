@@ -14,7 +14,10 @@ RUN set -ex \
     icu-dev \
     oniguruma-dev \
     supervisor \
-    dcron
+    dcron \
+    autoconf \
+    g++ \
+    make
 
 # 2. Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -25,7 +28,9 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     zip \
     bcmath \
     intl \
-    opcache
+    opcache \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 # 3. Copy PHP configuration for production
 COPY docker/php/local.ini /usr/local/etc/php/conf.d/local.ini

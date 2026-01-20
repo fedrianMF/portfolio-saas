@@ -1,0 +1,32 @@
+name: Deploy SaaS to Production
+
+on:
+  push:
+    branches: [prod] # Cambiado de main a prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/projects/saas
+            # Force update from prod branch
+            git fetch origin prod
+            git reset --hard origin/prod
+
+            # Build and start with the production file
+            docker compose -f docker-compose.prod.yml up -d --build
+
+            # Run migrations (important in a SaaS)
+            docker exec saas_app php artisan migrate --force
+
+            docker image prune -f

@@ -4,7 +4,6 @@
 
 @layer base {
   html {
-    background-color: #020617;
-    /* slate-950 */
+    @apply bg-surface-main;
   }
 }

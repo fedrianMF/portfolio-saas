@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     <!-- VPS Card -->
     <div
-      class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 hover:border-indigo-500/30 transition-all hover:bg-slate-900/80 group">
+      class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 hover:border-amber-500/30 transition-all hover:bg-slate-900/80 group">
       <div class="flex justify-between items-start mb-4">
         <h3 class="text-slate-50 font-semibold">VPS</h3>
         <span :class="getStatusBadge(healthData.vps.status)">
@@ -27,7 +27,7 @@
 
     <!-- PostgreSQL Card -->
     <div
-      class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 hover:border-indigo-500/30 transition-all hover:bg-slate-900/80 group">
+      class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 hover:border-amber-500/30 transition-all hover:bg-slate-900/80 group">
       <div class="flex justify-between items-start mb-4">
         <h3 class="text-slate-50 font-semibold">PostgreSQL</h3>
         <span :class="getStatusBadge(healthData.postgresql.status)">
@@ -52,7 +52,7 @@
 
     <!-- Redis Card -->
     <div
-      class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 hover:border-indigo-500/30 transition-all hover:bg-slate-900/80 group">
+      class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 hover:border-amber-500/30 transition-all hover:bg-slate-900/80 group">
       <div class="flex justify-between items-start mb-4">
         <h3 class="text-slate-50 font-semibold">Redis</h3>
         <span :class="getStatusBadge(healthData.redis.status)">
@@ -77,7 +77,7 @@
 
     <!-- Queue Workers Card -->
     <div
-      class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 hover:border-indigo-500/30 transition-all hover:bg-slate-900/80 group">
+      class="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 hover:border-amber-500/30 transition-all hover:bg-slate-900/80 group">
       <div class="flex justify-between items-start mb-4">
         <h3 class="text-slate-50 font-semibold">Queue Workers</h3>
         <span :class="getStatusBadge(healthData.queue.status)">

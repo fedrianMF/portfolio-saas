@@ -10,11 +10,16 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue'),
-        ),
+    resolve: (name) => {
+        const parts = name.split('/');
+        const module = parts[0];
+        const page = parts.length > 1 ? parts.slice(1).join('/') : module;
+
+        return resolvePageComponent(
+            `./Modules/${module}/Pages/${page}.vue`,
+            import.meta.glob('./Modules/**/*.vue'),
+        );
+    },
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)

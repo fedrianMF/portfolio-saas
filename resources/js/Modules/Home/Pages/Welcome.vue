@@ -20,6 +20,10 @@ defineProps({
         type: String,
         required: true,
     },
+    // Data for Live Preview
+    healthData: Object,
+    cpuData: Array,
+    memoryData: Array,
 });
 </script>
 
@@ -39,7 +43,7 @@ defineProps({
         <LandingHeader :can-login="canLogin" :can-register="canRegister" />
 
         <main class="relative z-10 pt-20 pb-32">
-            <LandingHero />
+            <LandingHero :health-data="healthData" :cpu-data="cpuData" :memory-data="memoryData" />
             <LandingFeatures />
         </main>
 

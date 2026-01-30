@@ -1,5 +1,12 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import LandingLivePreview from './LandingLivePreview.vue';
+
+defineProps({
+    healthData: Object,
+    cpuData: Array,
+    memoryData: Array,
+});
 </script>
 
 <template>
@@ -41,19 +48,14 @@ import { Link } from '@inertiajs/vue3';
         </div>
     </div>
 
-    <!-- Dashboard Preview -->
-    <div class="max-w-6xl mx-auto px-6 mt-24">
+    <!-- Dashboard Preview (Live Widget) -->
+    <div class="max-w-5xl mx-auto px-6 mt-20">
         <div
             class="relative group p-1 rounded-3xl bg-gradient-to-br from-amber-500/30 via-slate-800/50 to-orange-500/30 shadow-2xl overflow-hidden transform hover:scale-[1.01] transition-all duration-700">
-            <div class="bg-slate-950 rounded-[22px] overflow-hidden border border-slate-800/50 p-2 md:p-4">
-                <img src="https://images.unsplash.com/photo-1551288049-bbbda546697a?auto=format&fit=crop&q=80&w=2070"
-                    alt="Dashboard Preview" class="rounded-xl shadow-2xl" />
-
-                <!-- Overlay gradient for depth -->
-                <div
-                    class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none">
-                </div>
-            </div>
+            <LandingLivePreview :health-data="healthData" :cpu-data="cpuData" :memory-data="memoryData" />
+            
+            <!-- Reflection/Glow Effect -->
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-white/5 pointer-events-none"></div>
         </div>
     </div>
 </template>

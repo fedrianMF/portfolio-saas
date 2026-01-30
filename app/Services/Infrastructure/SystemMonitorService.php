@@ -9,9 +9,9 @@ class SystemMonitorService
         return [
             'vps' => [
                 'status' => 'healthy',
-                'cpu' => rand(20, 45),
-                'memory' => rand(50, 70),
-                'uptime' => '45d'
+                'cpu' => $this->getCpuUsage(),
+                'memory' => $this->getMemoryUsage(),
+                'uptime' => $this->getUptime()
             ],
             'postgresql' => [
                 'status' => 'healthy',
@@ -46,14 +46,77 @@ class SystemMonitorService
 
     public function getResourceTelemetry(): array
     {
-        // Generar datos mockeados para graficos (time slots)
-        $times = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'];
-        
+        $times = ['00:00', '04:00', '08:00', '12:00', '16:00', date('H:i')];
+
+        // Use real current value for the last point, mock history for now
+        $currentCpu = $this->getCpuUsage();
+        $currentMemory = $this->getMemoryUsage();
+        $currentDisk = $this->getDiskUsage();
+
         return [
-            'cpu' => array_map(fn($t) => ['time' => $t, 'value' => rand(20, 60)], $times),
-            'memory' => array_map(fn($t) => ['time' => $t, 'value' => rand(50, 80)], $times),
-            'disk' => array_map(fn($t) => ['time' => $t, 'value' => rand(40, 55)], $times),
+            'cpu' => array_map(
+                fn($t, $i) =>
+                ['time' => $t, 'value' => $i === count($times) - 1 ? $currentCpu : rand(20, 60)],
+                $times,
+                array_keys($times)
+            ),
+            'memory' => array_map(
+                fn($t, $i) =>
+                ['time' => $t, 'value' => $i === count($times) - 1 ? $currentMemory : rand(50, 80)],
+                $times,
+                array_keys($times)
+            ),
+            'disk' => array_map(
+                fn($t, $i) =>
+                ['time' => $t, 'value' => $i === count($times) - 1 ? $currentDisk : rand(40, 55)],
+                $times,
+                array_keys($times)
+            ),
         ];
+    }
+
+    private function getCpuUsage(): int
+    {
+        // Simple accurate load for Linux
+        if (function_exists('sys_getloadavg')) {
+            $load = sys_getloadavg();
+            return (int) ($load[0] * 10); // Rough approximation for demo, 1.0 load = ~10% visual
+        }
+        return 0;
+    }
+
+    private function getMemoryUsage(): int
+    {
+        if (file_exists('/proc/meminfo')) {
+            $data = explode("\n", file_get_contents('/proc/meminfo'));
+            $memTotal = $memAvailable = 0;
+            foreach ($data as $line) {
+                if (preg_match('/^MemTotal:\s+(\d+)\s+kB$/i', $line, $matches)) $memTotal = $matches[1];
+                if (preg_match('/^MemAvailable:\s+(\d+)\s+kB$/i', $line, $matches)) $memAvailable = $matches[1];
+            }
+            if ($memTotal > 0) {
+                return (int) ((($memTotal - $memAvailable) / $memTotal) * 100);
+            }
+        }
+        return 0;
+    }
+
+    private function getDiskUsage(): int
+    {
+        $total = disk_total_space('/');
+        $free = disk_free_space('/');
+        return (int) ((($total - $free) / $total) * 100);
+    }
+
+    private function getUptime(): string
+    {
+        if (file_exists('/proc/uptime')) {
+            $uptime = (int) explode(' ', file_get_contents('/proc/uptime'))[0];
+            $days = floor($uptime / 86400);
+            $hours = floor(($uptime % 86400) / 3600);
+            return "{$days}d {$hours}h";
+        }
+        return '0d';
     }
 
     public function getDatabasePerformance(): array

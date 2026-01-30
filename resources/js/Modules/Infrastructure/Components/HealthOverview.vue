@@ -1,3 +1,26 @@
+<script setup>
+defineProps({
+  healthData: {
+    type: Object,
+    required: true
+  }
+})
+
+const getStatusBadge = (status) => {
+  const baseClass = 'px-2 py-1 rounded text-xs font-semibold'
+  switch (status) {
+    case 'healthy':
+      return `${baseClass} bg-emerald-500/20 text-emerald-400`
+    case 'warning':
+      return `${baseClass} bg-amber-500/20 text-amber-400`
+    case 'critical':
+      return `${baseClass} bg-red-500/20 text-red-400`
+    default:
+      return `${baseClass} bg-slate-500/20 text-slate-400`
+  }
+}
+</script>
+
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     <!-- VPS Card -->
@@ -101,26 +124,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-defineProps({
-  healthData: {
-    type: Object,
-    required: true
-  }
-})
-
-const getStatusBadge = (status) => {
-  const baseClass = 'px-2 py-1 rounded text-xs font-semibold'
-  switch (status) {
-    case 'healthy':
-      return `${baseClass} bg-emerald-500/20 text-emerald-400`
-    case 'warning':
-      return `${baseClass} bg-amber-500/20 text-amber-400`
-    case 'critical':
-      return `${baseClass} bg-red-500/20 text-red-400`
-    default:
-      return `${baseClass} bg-slate-500/20 text-slate-400`
-  }
-}
-</script>

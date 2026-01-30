@@ -1,3 +1,41 @@
+<script setup>
+import { onMounted } from 'vue'
+import DashboardHeader from '../Components/DashboardHeader.vue'
+import HealthOverview from '../Components/HealthOverview.vue'
+import SecurityOverview from '../Components/SecurityOverview.vue'
+import ResourceChart from '../Components/ResourceChart.vue'
+import DatabasePerformance from '../Components/DatabasePerformance.vue'
+import WorkerMonitor from '../Components/WorkerMonitor.vue'
+import JobPipeline from '../Components/JobPipeline.vue'
+import CronScheduler from '../Components/CronScheduler.vue'
+import ActiveSessions from '../Components/ActiveSessions.vue'
+import DockerContainers from '../Components/DockerContainers.vue'
+import AuditLogs from '../Components/AuditLogs.vue'
+
+const props = defineProps({
+  healthData: Object,
+  securityData: Object,
+  cpuData: Array,
+  memoryData: Array,
+  diskData: Array,
+  databasePerformance: Object,
+  supervisorWorkers: Array,
+  recentJobs: Array,
+  cronTasks: Array,
+  activeSessions: Array,
+  dockerContainers: Array,
+  auditLogs: Array,
+})
+
+
+onMounted(() => {
+  // Poll for real-time updates from your Laravel backend
+  setInterval(() => {
+    // Example: fetch('/api/dashboard/status').then(...)
+  }, 5000)
+})
+</script>
+
 <template>
   <div class="min-h-screen bg-slate-950 text-slate-50">
     <!-- Header -->
@@ -63,44 +101,6 @@
     </main>
   </div>
 </template>
-
-<script setup>
-import { onMounted } from 'vue'
-import DashboardHeader from '../Components/DashboardHeader.vue'
-import HealthOverview from '../Components/HealthOverview.vue'
-import SecurityOverview from '../Components/SecurityOverview.vue'
-import ResourceChart from '../Components/ResourceChart.vue'
-import DatabasePerformance from '../Components/DatabasePerformance.vue'
-import WorkerMonitor from '../Components/WorkerMonitor.vue'
-import JobPipeline from '../Components/JobPipeline.vue'
-import CronScheduler from '../Components/CronScheduler.vue'
-import ActiveSessions from '../Components/ActiveSessions.vue'
-import DockerContainers from '../Components/DockerContainers.vue'
-import AuditLogs from '../Components/AuditLogs.vue'
-
-const props = defineProps({
-  healthData: Object,
-  securityData: Object,
-  cpuData: Array,
-  memoryData: Array,
-  diskData: Array,
-  databasePerformance: Object,
-  supervisorWorkers: Array,
-  recentJobs: Array,
-  cronTasks: Array,
-  activeSessions: Array,
-  dockerContainers: Array,
-  auditLogs: Array,
-})
-
-
-onMounted(() => {
-  // Poll for real-time updates from your Laravel backend
-  setInterval(() => {
-    // Example: fetch('/api/dashboard/status').then(...)
-  }, 5000)
-})
-</script>
 
 <style scoped>
 /* Dark mode system dashboard styles */

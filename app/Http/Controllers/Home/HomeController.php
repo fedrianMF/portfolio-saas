@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
-use App\Services\Infrastructure\SystemMonitorService;
+use App\Services\Infrastructure\Host\HostMonitorService;
+use App\Services\Infrastructure\Connectivity\ConnectivityMonitorService;
+use App\Services\Infrastructure\Queue\QueueMonitorService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -12,12 +14,15 @@ use Inertia\Response;
 class HomeController extends Controller
 {
     public function __construct(
-        protected SystemMonitorService $monitorService
+        protected HostMonitorService $hostMonitor,
+        protected ConnectivityMonitorService $connectivityMonitor,
+        protected QueueMonitorService $queueMonitor
     ) {}
 
     public function index(): Response
     {
-        $telemetry = $this->monitorService->getResourceTelemetry();
+        $telemetry = $this->hostMonitor->getResourceTelemetry();
+        $servicesStatus = $this->connectivityMonitor->getServicesStatus();
 
         return Inertia::render('Home/Welcome', [
             'canLogin' => Route::has('login'),
@@ -25,7 +30,12 @@ class HomeController extends Controller
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
             // Pass system data for the live preview
-            'healthData' => $this->monitorService->getSystemHealth(),
+            'healthData' => [
+                'vps' => array_merge(['status' => 'healthy'], $this->hostMonitor->getSystemHealth()),
+                'postgresql' => $servicesStatus['database'],
+                'redis' => $servicesStatus['redis'],
+                'queue' => $this->queueMonitor->getQueueHealth(),
+            ],
             'cpuData' => $telemetry['cpu'],
             'memoryData' => $telemetry['memory'],
         ]);

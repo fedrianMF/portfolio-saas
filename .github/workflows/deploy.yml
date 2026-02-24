@@ -26,7 +26,7 @@ jobs:
               git init
               git remote add origin https://github.com/fedrianMF/portfolio-saas.git
             fi
-            
+
             git fetch origin prod
             git reset --hard origin/prod
 
